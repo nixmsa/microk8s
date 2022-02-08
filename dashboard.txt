@@ -1,0 +1,56 @@
+mahsan@microk8s:~/microk8s$ microk8s start
+[sudo] password for mahsan:
+Started.
+mahsan@microk8s:~/microk8s$
+
+***
+
+mahsan@microk8s:~/microk8s$ microk8s enable dashboard dns
+Addon dashboard is already enabled.
+Enabling DNS
+Applying manifest
+serviceaccount/coredns unchanged
+configmap/coredns unchanged
+deployment.apps/coredns unchanged
+clusterrole.rbac.authorization.k8s.io/coredns unchanged
+clusterrolebinding.rbac.authorization.k8s.io/coredns unchanged
+The Service "kube-dns" is invalid: spec.clusterIPs: Invalid value: []string{"10.152.183.10"}: failed to allocate IP 10.152.183.10: provided IP is already allocated
+mahsan@microk8s:~/microk8s$ microk8s kubectl get services -n kube-system
+NAME                        TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)    AGE
+metrics-server              ClusterIP   10.152.183.5     <none>        443/TCP    36h
+kubernetes-dashboard        ClusterIP   10.152.183.207   <none>        443/TCP    36h
+dashboard-metrics-scraper   ClusterIP   10.152.183.10    <none>        8000/TCP   36h
+mahsan@microk8s:~/microk8s$
+
+***
+
+mahsan@microk8s:~/microk8s$ microk8s kubectl -n kube-system describe secret $(microk8s kubectl -n kube-system get secret | grep default-token | awk '{print $1}')
+Name:         default-token-hc7nc
+Namespace:    kube-system
+Labels:       <none>
+Annotations:  kubernetes.io/service-account.name: default
+              kubernetes.io/service-account.uid: a56f2a27-54a9-4215-a959-ffaa25cc18a1
+
+Type:  kubernetes.io/service-account-token
+
+Data
+====
+token:      eyJhbGciOiJSUzI1NiIsImtpZCI6ImlVV1lqXzNWZFIyeDhNTmlDcUx5Z1BqUm9GQm44cnV0dVBfRUdqTDUzMG8ifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlLXN5c3RlbSIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJkZWZhdWx0LXRva2VuLWhjN25jIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImRlZmF1bHQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJhNTZmMmEyNy01NGE5LTQyMTUtYTk1OS1mZmFhMjVjYzE4YTEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZS1zeXN0ZW06ZGVmYXVsdCJ9.Pv1Zaq04gpjB872vW7xkipveFuHs0cc8nFiGOz50ZzQKpfUtFH67k8uYKGd4WBOMXJU8PSVfhXUbHLrXgD0V41m3_9JHbqAIt-SxmJdw1fKf1R78mVPgX9lY7xJ4b1IFxRdgYwjITYxJLZvPZJRoyrrDpxR1DmpwWd9SY3uQ-pYdWI8358b4oBODMHcI2M1adokgDaHjFSfDp_dglM0b7SMcem5OkrHJFyq6Y-LSGpGdKxept4JPayPxzDJOI68rzQfoqT5qL4SE3Z2htf4InehudHoNmiCDrIzM3r2S0Tp1bcE5todNVrbNhUk3Go6DDP37lsX_zI2aNaRIpzIZeA
+ca.crt:     1123 bytes
+namespace:  11 bytes
+mahsan@microk8s:~/microk8s$
+
+***
+
+mahsan@microk8s:~/microk8s$ microk8s kubectl get svc
+NAME         TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)   AGE
+kubernetes   ClusterIP   10.152.183.1   <none>        443/TCP   36h
+mahsan@microk8s:~/microk8s$ microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard --address 0.0.0.0 10443:443
+Forwarding from 0.0.0.0:10443 -> 8443
+
+***
+
+
+A
+A
+
